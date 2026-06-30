@@ -1,0 +1,134 @@
+name: Claude Issue Triage
+
+on:
+  issues:
+    types: [opened, edited]
+
+concurrency:
+  group: issue-triage-${{ github.event.issue.number }}
+  cancel-in-progress: true
+
+jobs:
+  triage:
+    # Skip bot actors to prevent automation loops
+    if: github.event.sender.type != 'Bot'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Triage issue with Claude
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          # Restrict tools to Read (game.js) and gh issue subcommands only.
+          # Limits prompt-injection exposure since issue body is untrusted input.
+          claude_args: '--allowed-tools Read,Bash(gh issue *)'
+          prompt: |
+            Eres un asistente automático de triage de issues para un clon de Tetris escrito
+            en vanilla JavaScript (sin dependencias, sin build step, sin framework).
+
+            ## Resumen del repositorio
+
+            Tres archivos fuente:
+
+            - `game.js` (~305 líneas) — toda la lógica del juego. Áreas clave:
+              - Estado: `board` (grid 10×20), `current`, `next`, `score`, `lines`,
+                `level`, `paused`, `gameOver`, `dropAccum`, `dropInterval`, `animId`
+              - `collide(shape, ox, oy)` — detección de colisiones con bordes y tablero
+              - `rotateCW(shape)` — rotación horaria (transpuesta + invertir filas)
+              - `tryRotate()` — aplica rotateCW, prueba wall-kicks con offsets [0,-1,1,-2,2]
+              - `clearLines()` — recorre el tablero de abajo a arriba, elimina filas completas
+              - `hardDrop()` — teletransporta pieza a posición del ghost, +2 pts/fila
+              - `softDrop()` — baja la pieza una fila, +1 pt/fila
+              - `lockPiece()` → `merge()` → `clearLines()` → `spawn()` — secuencia de bloqueo
+              - `ghostY()` — proyecta la pieza hacia abajo hasta colisión (dibujado con alpha 0.2)
+              - `loop(ts)` — game loop con rAF; velocidad = max(100, 1000-(level-1)×90) ms/fila
+              - `init()` — reset completo; llamado al cargar y al reiniciar
+              - `LINE_SCORES = [0, 100, 300, 500, 800]` × level para 1-4 líneas
+              - Controles: ArrowLeft/Right (mover), ArrowDown (soft drop), ArrowUp/X (rotar),
+                Space (hard drop), P (pausa/reanudar)
+
+            - `index.html` — `<canvas id="board">` (300×600 px) para el tablero,
+              `<canvas id="next-canvas">` (120×120 px) para la pieza siguiente,
+              `<aside class="panel">` con displays de SCORE/LINES/LEVEL,
+              `<div id="overlay">` reutilizado para los estados PAUSA y GAME OVER
+              (mostrado/ocultado alternando la clase CSS `.hidden`)
+
+            - `style.css` — estética oscura/retro; el overlay usa `backdrop-filter: blur`
+
+            Lee `game.js` ahora para identificar las funciones y líneas específicas relevantes
+            al issue antes de realizar las tareas de triage.
+
+            ## Issue a analizar
+
+            Número de issue: ${{ github.event.issue.number }}
+            Título: ${{ github.event.issue.title }}
+
+            Cuerpo:
+            ${{ github.event.issue.body }}
+
+            ## Tarea 1 — Aplicar labels
+
+            Elige entre 1 y 3 labels del conjunto predefinido que mejor describan este issue
+            y ejecuta exactamente este comando (separados por coma, sin espacios):
+
+              gh issue edit ${{ github.event.issue.number }} --add-label "LABEL1,LABEL2"
+
+            Labels disponibles:
+              bug           — Comportamiento incorrecto del juego
+              enhancement   — Nueva funcionalidad o mejora solicitada
+              gameplay      — Mecánicas: movimiento, rotación, line clears, velocidad
+              ui            — Problemas visuales, de renderizado o canvas
+              scoring       — Problemas de puntuación, nivel o conteo de líneas
+              controls      — Teclado o controles
+              performance   — Frame rate o rendimiento
+              documentation — Documentación o comentarios en el código
+              question      — Pregunta general sobre el juego
+              duplicate     — Issue ya reportado
+              invalid       — Issue no válido para este proyecto
+              wontfix       — Fuera del alcance de este proyecto
+
+            ## Tarea 2 — Publicar comentario de diagnóstico en español
+
+            Tras aplicar los labels, publica un comentario estructurado en español.
+            Usa un heredoc para el contenido multilínea:
+
+              gh issue comment ${{ github.event.issue.number }} --body "$(cat <<'DIAGNOSIS'
+              ... contenido del comentario ...
+              DIAGNOSIS
+              )"
+
+            El comentario debe seguir exactamente esta estructura Markdown (todo en español):
+
+            ## 🔍 Diagnóstico del Issue
+
+            **Resumen**: [párrafo resumiendo el issue]
+
+            **Categoría**: [Bug / Mejora / Pregunta / Duplicado / No válido / etc.]
+
+            **Componentes afectados**:
+            - [archivo y función(es) específicas, ej: `game.js` → `tryRotate()`, `rotateCW()`]
+
+            **Complejidad estimada**: [Baja / Media / Alta] — [justificación en una frase]
+
+            **Contexto técnico**:
+            [2-4 oraciones referenciando las funciones y lógica específicas encontradas en
+            game.js. Usa backticks para nombres de funciones y constantes.]
+
+            **Sugerencia de implementación**:
+            1. [Primer paso de implementación]
+            2. [Segundo paso]
+            [Continuar según sea necesario]
+
+            **Labels asignados**: `label1`, `label2` — [breve razón]
+
+            ---
+            *Análisis generado automáticamente por Claude*
