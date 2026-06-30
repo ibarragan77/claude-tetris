@@ -99,6 +99,11 @@ jobs:
             ## Tarea 2 — Publicar comentario de diagnóstico en español
 
             Tras aplicar los labels, publica un comentario estructurado en español.
+            El contenido del comentario DEBE estar escrito en GitHub Flavored Markdown (GFM)
+            válido: usa encabezados `##`, negritas `**texto**`, listas con `-`, bloques de
+            código con backticks, y cualquier otro elemento que GitHub renderice correctamente
+            en la interfaz de issues. No uses HTML ni formato plano.
+
             Usa un heredoc para el contenido multilínea:
 
               gh issue comment ${{ github.event.issue.number }} --body "$(cat <<'DIAGNOSIS'
