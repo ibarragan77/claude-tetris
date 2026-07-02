@@ -116,6 +116,45 @@ body {
   transform: translateX(20px);
 }
 
+/* ---- Skin picker ---- */
+.skin-picker {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.skin-picker select {
+  background: var(--kbd-bg);
+  color: var(--kbd-text);
+  border: 1px solid var(--kbd-border);
+  border-radius: 6px;
+  padding: 3px 6px;
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* ---- Skins ---- */
+body.skin-neon #board,
+body.skin-neon #next-canvas {
+  background: #060608;
+  border-color: #0ff;
+  box-shadow: 0 0 30px rgba(0, 255, 255, 0.35), inset 0 0 20px rgba(0, 255, 255, 0.08);
+}
+
+body.skin-pastel #board,
+body.skin-pastel #next-canvas {
+  background: #fff8fb;
+  border-color: #e8c9ec;
+  border-radius: 14px;
+}
+
+body.skin-pixel #board,
+body.skin-pixel #next-canvas {
+  image-rendering: pixelated;
+}
+
 .game-container {
   display: flex;
   gap: 20px;
