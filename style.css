@@ -213,6 +213,99 @@ body[data-skin="neon"] #next-canvas {
   border-radius: 4px;
 }
 
+/* ---- Records ---- */
+.records-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.record-row {
+  display: grid;
+  grid-template-columns: 18px 1fr auto;
+  gap: 6px;
+  align-items: center;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 12px;
+  padding: 2px 4px;
+  border-radius: 3px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.record-rank {
+  color: var(--label);
+  font-weight: 700;
+}
+
+.record-name {
+  color: var(--text);
+  letter-spacing: 1px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.record-score {
+  color: var(--accent);
+  font-weight: 700;
+  text-align: right;
+}
+
+.record-row.is-new-highscore {
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent-soft), 0 0 2px var(--accent-soft);
+  animation: highscore-glow 1.4s ease-in-out infinite alternate;
+}
+
+.record-row.is-new-highscore .record-rank,
+.record-row.is-new-highscore .record-name,
+.record-row.is-new-highscore .record-score {
+  color: var(--restart-text);
+}
+
+@keyframes highscore-glow {
+  from { box-shadow: 0 0 6px var(--accent-soft); }
+  to { box-shadow: 0 0 16px var(--accent-soft); }
+}
+
+.records-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 11px;
+}
+
+.records-stat-label {
+  color: var(--control-text);
+  letter-spacing: 0.5px;
+}
+
+.records-stat-value {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.reset-records-btn {
+  margin-top: 4px;
+  background: transparent;
+  color: var(--label);
+  border: 1px solid var(--kbd-border);
+  border-radius: 5px;
+  padding: 6px 10px;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.reset-records-btn:hover {
+  background: var(--kbd-bg);
+  color: var(--text);
+  border-color: var(--accent);
+}
+
 /* ---- Controles ---- */
 .controls ul {
   list-style: none;
@@ -251,7 +344,8 @@ kbd {
   border-radius: 4px;
 }
 
-.overlay.hidden {
+.overlay.hidden,
+.name-entry.hidden {
   display: none;
 }
 
@@ -291,6 +385,59 @@ kbd {
 }
 
 #restart-btn:hover {
+  background: var(--accent-soft);
+}
+
+/* ---- Name entry (game over high score) ---- */
+.name-entry {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+}
+
+.name-entry-label {
+  font-size: 12px;
+  color: var(--overlay-title);
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+.name-entry-input {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 16px;
+  letter-spacing: 4px;
+  text-align: center;
+  text-transform: uppercase;
+  width: 120px;
+  padding: 8px 6px;
+  background: var(--board-bg);
+  color: var(--text);
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  outline: none;
+}
+
+.name-entry-input:focus {
+  border-color: var(--accent-soft);
+  box-shadow: 0 0 8px var(--accent-soft);
+}
+
+#save-score-btn {
+  background: var(--accent);
+  color: var(--restart-text);
+  border: none;
+  border-radius: 6px;
+  padding: 8px 24px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: background 0.15s;
+}
+
+#save-score-btn:hover {
   background: var(--accent-soft);
 }
 
