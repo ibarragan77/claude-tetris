@@ -16,6 +16,15 @@
         <span class="theme-slider"></span>
         <span class="theme-icon">☀️</span>
       </label>
+      <label class="skin-picker" for="skin-select" title="Cambiar skin visual">
+        <span class="theme-icon">🎨</span>
+        <select id="skin-select">
+          <option value="retro">Retro</option>
+          <option value="neon">Neon</option>
+          <option value="pastel">Pastel</option>
+          <option value="pixel">Pixel Art</option>
+        </select>
+      </label>
     </div>
     <div class="game-container">
       <canvas id="board" width="300" height="600"></canvas>
@@ -60,7 +69,7 @@
             <li><kbd>↑</kbd> rotar</li>
             <li><kbd>↓</kbd> bajar</li>
             <li><kbd>Space</kbd> caída</li>
-            <li><kbd>P</kbd> pausa</li>
+            <li><kbd>P</kbd> / <kbd>Esc</kbd> pausa</li>
           </ul>
         </div>
       </aside>
@@ -76,6 +85,38 @@
           <button id="save-score-btn">Guardar</button>
         </div>
         <button id="restart-btn">Reiniciar</button>
+
+        <div class="pause-menu">
+          <div class="pause-menu-actions">
+            <button id="resume-btn">Reanudar</button>
+            <button id="pause-restart-btn">Reiniciar</button>
+            <button id="toggle-controls-btn">Ver controles</button>
+          </div>
+
+          <div class="pause-level">
+            <label for="start-level-select">Nivel inicial</label>
+            <select id="start-level-select">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+            </select>
+          </div>
+
+          <ul id="overlay-controls" class="controls-list hidden">
+            <li><kbd>←</kbd><kbd>→</kbd> mover</li>
+            <li><kbd>↑</kbd> rotar</li>
+            <li><kbd>↓</kbd> bajar</li>
+            <li><kbd>Space</kbd> caída</li>
+            <li><kbd>P</kbd> / <kbd>Esc</kbd> pausa</li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
