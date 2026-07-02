@@ -217,6 +217,10 @@ kbd {
   align-items: center;
 }
 
+.overlay-box.hidden {
+  display: none;
+}
+
 #overlay-title {
   font-size: 28px;
   font-weight: 800;
@@ -230,7 +234,7 @@ kbd {
   color: var(--accent);
 }
 
-#restart-btn {
+#restart-btn, .menu-btn {
   margin-top: 8px;
   background: var(--accent);
   color: var(--restart-text);
@@ -244,6 +248,75 @@ kbd {
   transition: background 0.15s;
 }
 
-#restart-btn:hover {
+#restart-btn:hover, .menu-btn:hover {
   background: var(--accent-soft);
+}
+
+/* ---- Pause menu ---- */
+.pause-box {
+  min-width: 220px;
+}
+
+.pause-title {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: 4px;
+  color: var(--accent);
+}
+
+.pause-view {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: stretch;
+  width: 100%;
+}
+
+.pause-view.hidden {
+  display: none;
+}
+
+.pause-view .menu-btn {
+  margin-top: 0;
+}
+
+.pause-level {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.pause-level label {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--label);
+  font-weight: 600;
+}
+
+.pause-level select {
+  background: var(--kbd-bg);
+  border: 1px solid var(--kbd-border);
+  color: var(--text);
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+#pause-controls-view ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+}
+
+#pause-controls-view li {
+  font-size: 12px;
+  color: var(--control-text);
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
